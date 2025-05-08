@@ -115,11 +115,11 @@ const Login: React.FC = () => {
     },
   ];
 
-  const appConfig = JSON.parse(localStorage.getItem('appConfig'));
+  // const appConfig = JSON.parse(localStorage.getItem('appConfig') || '{}');
 
-  const sysAppName = appConfig?.sys_app_name ?? 'go-admin-pro';
-  const sysSiteLogo = appConfig?.sys_site_logo ?? 'http://doc-image.zhangwj.com/img/go-admin.png';
-  const sysSiteDesc = appConfig?.sys_site_desc ?? '欢迎使用go-admin-pro';
+  const sysAppName = 'go-admin-pro';
+  const sysSiteLogo = 'http://doc-image.zhangwj.com/img/go-admin.png';
+  const sysSiteDesc = '欢迎使用go-admin-pro';
 
   return (
     <div className={styles.container}>
