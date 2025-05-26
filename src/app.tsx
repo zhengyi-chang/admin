@@ -159,9 +159,10 @@ export async function getInitialState(): Promise<{
 // 请求拦截
 const requestInterceptors = (url: string, options: RequestOptionsInit) => {
   const baseUrl = getApiBaseUrl();
+  // console.log('baseUrl', baseUrl);
   // 确保URL以/开头但不以//开头
   const apiUrl = `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
-
+  // console.log('apiUrl', apiUrl);
   if (localStorage.getItem('token')) {
     const headers = {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -172,10 +173,10 @@ const requestInterceptors = (url: string, options: RequestOptionsInit) => {
     };
   }
 
-  if (url.indexOf('login') === -1) {
-    history.push(loginPath);
-    return {};
-  }
+  // if (url.indexOf('login') === -1) {
+  //   history.push(loginPath);
+  //   return {};
+  // }
 
   return {
     url: apiUrl,
