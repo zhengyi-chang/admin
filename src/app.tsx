@@ -1,23 +1,21 @@
-import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import { createFromIconfontCN } from '@ant-design/icons';
-import type { MenuDataItem, Settings as LayoutSettings } from '@ant-design/pro-components';
+import type { Settings as LayoutSettings, MenuDataItem } from '@ant-design/pro-components';
 import { PageLoading, SettingDrawer } from '@ant-design/pro-components';
-import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
-import { history, Link } from 'umi';
-import {
-  currentUser as queryCurrentUser,
-  optionDictDataSelect,
-  fetchMenuData,
-  currentAppConfig,
-} from './services/ant-design-pro/api';
-import defaultSettings from '../config/defaultSettings';
-import type { RequestOptionsInit } from 'umi-request';
 import { message, notification } from 'antd';
 import React from 'react';
+import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
+import { history } from 'umi';
+import type { RequestOptionsInit } from 'umi-request';
+import { getApiBaseUrl } from '../config/apiConfig';
+import defaultSettings from '../config/defaultSettings';
+import {
+  currentAppConfig,
+  fetchMenuData,
+  optionDictDataSelect,
+  currentUser as queryCurrentUser,
+} from './services/ant-design-pro/api';
 
-const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
@@ -28,7 +26,6 @@ export const initialStateConfig = {
 const IconFont = createFromIconfontCN({
   scriptUrl: [
     '//at.alicdn.com/t/font_2713835_daepmvl8rp4.js',
-    // '//at.alicdn.com/t/font_3418336_n2fh4bof259.js',
     '//at.alicdn.com/t/c/font_2713835_x7ngtq8folo.js',
   ],
 });
@@ -52,6 +49,10 @@ export async function getInitialState(): Promise<{
   fetchAppConfig?: () => Promise<API.AppConfigItem[] | undefined>;
   appConfigOption?: API.AppConfigItem[];
 }> {
+  // 在 getInitialState 函数开始处添加
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('umi_locale', 'en-US');
+  }
   const fetchSexSelect = async () => {
     try {
       const sexSelectOption = await optionDictDataSelect({ dictType: 'sys_user_sex' });
@@ -99,9 +100,12 @@ export async function getInitialState(): Promise<{
 
   const appConfigOption = await fetchAppConfig();
 
-  defaultSettings.title = appConfigOption?.sys_app_name ?? 'go-admin-pro';
-  defaultSettings.logo =
-    appConfigOption?.sys_site_logo ?? 'http://doc-image.zhangwj.com/img/go-admin.png';
+  // defaultSettings.title = appConfigOption?.sys_app_name ?? 'go-admin-pro';
+  // defaultSettings.logo =
+  //   appConfigOption?.sys_site_logo ?? 'http://doc-image.zhangwj.com/img/go-admin.png';
+
+  defaultSettings.title = 'PolyFlow';
+  defaultSettings.logo = '/logo.svg';
 
   // 如果不是登录页面，执行
   if (!history.location.pathname.includes(loginPath)) {
@@ -154,24 +158,27 @@ export async function getInitialState(): Promise<{
 
 // 请求拦截
 const requestInterceptors = (url: string, options: RequestOptionsInit) => {
+  const baseUrl = getApiBaseUrl();
+  // 确保URL以/开头但不以//开头
+  const apiUrl = `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
+
   if (localStorage.getItem('token')) {
     const headers = {
-      // 'Content-Type': 'application/json',
-      // Accept: 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     };
     return {
-      url,
+      url: apiUrl,
       options: { ...options, headers },
     };
   }
+
   if (url.indexOf('login') === -1) {
     history.push(loginPath);
     return {};
   }
 
   return {
-    url,
+    url: apiUrl,
     options: { ...options },
   };
 };
@@ -198,7 +205,7 @@ const respMiddleware = (response: Response, options: RequestOptionsInit) => {
   return response;
 };
 
-const fixMenuItemIcon = (menus: MenuDataItem[], iconType = 'Outlined'): MenuDataItem[] => {
+const fixMenuItemIcon = (menus: MenuDataItem[]): MenuDataItem[] => {
   menus.forEach((item) => {
     const { icon, children } = item;
     if (typeof icon === 'string') {
@@ -207,7 +214,9 @@ const fixMenuItemIcon = (menus: MenuDataItem[], iconType = 'Outlined'): MenuData
       });
     }
 
-    children && children.length > 0 ? (item.children = fixMenuItemIcon(children)) : null;
+    if (children && children.length > 0) {
+      item.children = fixMenuItemIcon(children);
+    }
   });
   return menus;
 };
@@ -270,7 +279,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
-    footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
@@ -278,26 +286,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    links: isDev
-      ? [
-          // eslint-disable-next-line react/jsx-key
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-          // eslint-disable-next-line react/jsx-key
-          <Link to="/~docs" key="docs">
-            <BookOutlined />
-            <span>业务组件文档</span>
-          </Link>,
-        ]
-      : [],
     menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
-    // 增加一个 loading 的状态
     childrenRender: (children, props) => {
-      // if (initialState?.loading) return <PageLoading />;
       return (
         <>
           {children}
@@ -319,12 +309,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     ...initialState?.settings,
     menu: {
-      // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
       params: {
         userId: initialState?.currentUser?.userid,
       },
       request: async (params, defaultMenuData) => {
-        // initialState.currentUser 中包含了所有用户信息
         const menuData = await fetchMenuData();
         return menuData.data;
       },

@@ -9,7 +9,8 @@ import {
 } from '@ant-design/pro-form';
 import { WaterMark } from '@ant-design/pro-layout';
 import { useIntl, useModel, FormattedMessage } from 'umi';
-import { ActionType, FooterToolbar, ProColumns, ProTable } from '@ant-design/pro-components';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import { FooterToolbar, ProTable } from '@ant-design/pro-components';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   listSysDictData,

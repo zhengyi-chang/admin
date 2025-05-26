@@ -108,6 +108,22 @@ export default [
     ],
   },
   {
+    path: '/operation',
+    routes: [
+      {
+        path: '/operation',
+        redirect: 'operation-manage',
+      },
+      {
+        path: '/operation/operation-manage',
+        component: './Operation',
+      },
+      {
+        component: './404',
+      },
+    ],
+  },
+  {
     path: '/demo',
     routes: [
       {

@@ -1,0 +1,41 @@
+.filter-section {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-button {
+  padding: 8px 16px;
+  color: #454549;
+  font-weight: 500;
+  font-size: 16px;
+  background: transparent;
+  border: none !important;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover,
+.filter-button.active {
+  color: #292fe1;
+  background: rgba(64, 66, 204, 0.1);
+  border-color: #292fe1;
+}
+
+.date-picker {
+  .ant-form-item {
+    margin-bottom: 0px;
+  }
+  .ant-picker {
+    height: 35px;
+    padding: 8px 16px;
+    color: #454549;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 120%;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+  }
+}

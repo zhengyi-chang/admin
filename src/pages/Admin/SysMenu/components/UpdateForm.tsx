@@ -147,7 +147,7 @@ const handleSysApiGet = async () => {
 const UpdateForm: React.FC<UpdateFormProps> = (props) => {
   const intl = useIntl();
   const [iconModalVisible, handleIconModalVisible] = useState<boolean>(false);
-  let data = props.values;
+  const data = props.values;
   const { initialState } = useModel('@@initialState');
   const [menus, setMenus] = useState<Partial<API.MenuListItem>>({});
 
@@ -402,15 +402,15 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
                           <Tooltip title="设置GetPage">
                             <UnorderedListOutlined
                               onClick={(event) => {
-                                let f = form.getFieldsValue();
-                                if (f['permission'] === '') {
-                                  f['permission'] = 'can__GetPage';
+                                const f = form.getFieldsValue();
+                                if (f.permission === '') {
+                                  f.permission = 'can__GetPage';
                                 }
-                                if (f['title'] === '') {
-                                  f['title'] = 'Search';
+                                if (f.title === '') {
+                                  f.title = 'Search';
                                 }
-                                if (f['menuName'] === '') {
-                                  f['menuName'] = '搜索';
+                                if (f.menuName === '') {
+                                  f.menuName = '搜索';
                                 }
                                 form.setFieldsValue(f);
                               }}
@@ -420,15 +420,15 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
                           <Tooltip title="设置Get">
                             <CopyOutlined
                               onClick={(event) => {
-                                let f = form.getFieldsValue();
-                                if (f['permission'] === '') {
-                                  f['permission'] = 'can__Get';
+                                const f = form.getFieldsValue();
+                                if (f.permission === '') {
+                                  f.permission = 'can__Get';
                                 }
-                                if (f['title'] === '') {
-                                  f['title'] = 'View';
+                                if (f.title === '') {
+                                  f.title = 'View';
                                 }
-                                if (f['menuName'] === '') {
-                                  f['menuName'] = '查看';
+                                if (f.menuName === '') {
+                                  f.menuName = '查看';
                                 }
                                 form.setFieldsValue(f);
                               }}
@@ -438,15 +438,15 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
                           <Tooltip title="设置Insert">
                             <FormOutlined
                               onClick={() => {
-                                let f = form.getFieldsValue();
-                                if (f['permission'] === '') {
-                                  f['permission'] = 'can__Insert';
+                                const f = form.getFieldsValue();
+                                if (f.permission === '') {
+                                  f.permission = 'can__Insert';
                                 }
-                                if (f['title'] === '') {
-                                  f['title'] = 'Insert';
+                                if (f.title === '') {
+                                  f.title = 'Insert';
                                 }
-                                if (f['menuName'] === '') {
-                                  f['menuName'] = '创建';
+                                if (f.menuName === '') {
+                                  f.menuName = '创建';
                                 }
                                 form.setFieldsValue(f);
                               }}
@@ -456,15 +456,15 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
                           <Tooltip title="设置Update">
                             <EditOutlined
                               onClick={() => {
-                                let f = form.getFieldsValue();
-                                if (f['permission'] === '') {
-                                  f['permission'] = 'can__Update';
+                                const f = form.getFieldsValue();
+                                if (f.permission === '') {
+                                  f.permission = 'can__Update';
                                 }
-                                if (f['title'] === '') {
-                                  f['title'] = 'Update';
+                                if (f.title === '') {
+                                  f.title = 'Update';
                                 }
-                                if (f['menuName'] === '') {
-                                  f['menuName'] = '编辑';
+                                if (f.menuName === '') {
+                                  f.menuName = '编辑';
                                 }
                                 form.setFieldsValue(f);
                               }}
@@ -474,15 +474,15 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
                           <Tooltip title="设置Delete">
                             <DeleteOutlined
                               onClick={() => {
-                                let f = form.getFieldsValue();
-                                if (f['permission'] === '') {
-                                  f['permission'] = 'can__Delete';
+                                const f = form.getFieldsValue();
+                                if (f.permission === '') {
+                                  f.permission = 'can__Delete';
                                 }
-                                if (f['title'] === '') {
-                                  f['title'] = 'Delete';
+                                if (f.title === '') {
+                                  f.title = 'Delete';
                                 }
-                                if (f['menuName'] === '') {
-                                  f['menuName'] = '删除';
+                                if (f.menuName === '') {
+                                  f.menuName = '删除';
                                 }
                                 form.setFieldsValue(f);
                               }}
@@ -494,7 +494,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
                               onClick={(event) => {
                                 const text = form.getFieldValue('permission');
                                 const list = String(text).split('_');
-                                var newlist: Number[] = [];
+                                const newlist: number[] = [];
                                 if (list.length >= 3) {
                                   let bl = true;
                                   apis.forEach((value) => {

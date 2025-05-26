@@ -34,7 +34,6 @@
     ".eslintrc.js",
     ".stylelintrc.js",
     ".prettierrc.js",
-    "jest.config.js",
     "mock/*",
     "src/pages/WfWorkOrder/List/related.tsx"
   ],

@@ -1,4 +1,5 @@
-import { EditableProTable, ProColumns, ProForm, ProFormInstance } from '@ant-design/pro-components';
+import type { ProColumns, ProFormInstance } from '@ant-design/pro-components';
+import { EditableProTable, ProForm } from '@ant-design/pro-components';
 import { message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRequest } from 'umi';

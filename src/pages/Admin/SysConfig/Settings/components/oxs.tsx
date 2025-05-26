@@ -305,7 +305,7 @@ const OxsView: React.FC = () => {
                           ]}
                           dependencies={['oxs_type']}
                           request={(params) => {
-                            var dictTypeStr = 'oxs_oss_region';
+                            let dictTypeStr = 'oxs_oss_region';
                             if (params.oxs_type === 'oss') {
                               dictTypeStr = 'oxs_oss_region';
                             } else if (params.oxs_type === 'obs') {

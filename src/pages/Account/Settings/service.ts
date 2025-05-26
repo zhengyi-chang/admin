@@ -17,7 +17,7 @@ export async function query() {
   return request('/api/users');
 }
 
-export async function updateCurrent(options?: { [key: string]: any }) {
+export async function updateCurrent(options?: Record<string, any>) {
   return request<CurrentUser>('/api/v1/user/current', {
     method: 'PUT',
     data: options || {},
@@ -25,7 +25,7 @@ export async function updateCurrent(options?: { [key: string]: any }) {
 }
 
 /** 修改 重置用户密码 PUT /api/user/pwd/reset */
-export async function updateUserPassword(options?: { [key: string]: any }) {
+export async function updateUserPassword(options?: Record<string, any>) {
   return request<Record<string, any>>('/api/v1/user/pwd/set', {
     method: 'PUT',
     data: options || {},

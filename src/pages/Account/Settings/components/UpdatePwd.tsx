@@ -3,10 +3,14 @@ import { message, Form } from 'antd';
 import { ModalForm, ProFormDependency, ProFormText } from '@ant-design/pro-components';
 import { WaterMark } from '@ant-design/pro-components';
 import { useIntl, useModel, FormattedMessage } from 'umi';
-import { UpdatePwd } from '../data';
+import type { UpdatePwd } from '../data';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type FormValueType = {} & Partial<UpdatePwd>;
+export type FormValueType = {
+  oldPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+} & Partial<UpdatePwd>;
 
 export type UpdatePwdFormProps = {
   onCancel: (flag?: boolean, formVals?: FormValueType) => void;

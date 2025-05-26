@@ -1,13 +1,8 @@
 import { Button, message, Tag } from 'antd';
 import React, { useState, useRef } from 'react';
 import { useIntl, FormattedMessage, useModel } from 'umi';
-import {
-  PageContainer,
-  FooterToolbar,
-  ProColumns,
-  ActionType,
-  ProTable,
-} from '@ant-design/pro-components';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
+import { PageContainer, FooterToolbar, ProTable } from '@ant-design/pro-components';
 import UpdateForm from './components/UpdateForm';
 import { listSysAbnormalLog, getSysAbnormalLog, removeSysAbnormalLog } from './service';
 

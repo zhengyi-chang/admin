@@ -90,4 +90,6 @@ export default {
   'menu.cms.article-manage': '文章管理',
   'menu.cms.menu-manage': '导航管理',
   'menu.cms.page-manage': '页面管理',
+
+  'menu.operation-manage': '运营管理',
 };

@@ -1,14 +1,28 @@
 import ObsClient from 'esdk-obs-browserjs';
 import { random_name } from './tools';
 
+interface OxsConfig {
+  provisionalAuth: boolean;
+  accessKey: string;
+  secretKey: string;
+  endpoint: string;
+  bucket: string;
+  accessDomain: string;
+  credential?: {
+    access: string;
+    secret: string;
+    securitytoken: string;
+  };
+}
+
 /**
  * @desc 华为云 OBS 封装
  * @param {Object} access_key
  * @returns { uploadFile }
  */
 
-export function uploadOBS(oxs) {
-  let clientOBS;
+export function uploadOBS(oxs: OxsConfig) {
+  let clientOBS: ObsClient;
   // 判断临时认证方式还是AK/SK方式
   // true 临时秘钥认证 上传
   // false ak/ak 上传
@@ -24,11 +38,11 @@ export function uploadOBS(oxs) {
   } else {
     clientOBS = new ObsClient({
       // AK
-      access_key_id: oxs.credential.access,
+      access_key_id: oxs.credential!.access,
       // 临时 SK
-      secret_access_key: oxs.credential.secret,
+      secret_access_key: oxs.credential!.secret,
       // 临时访问 Token
-      security_token: oxs.credential.securitytoken,
+      security_token: oxs.credential!.securitytoken,
       // 端点地址
       server: oxs.endpoint,
     });
@@ -38,10 +52,10 @@ export function uploadOBS(oxs) {
    * @desc 文件上传
    * @param {File} file
    * @param {String} [path = ''] - File upload path
-   * @param {Function} [fileProgress = (transferredAmount, totalAmount, totalSeconds) => void] - File progress callback
+   * @param {Function} [fileProgress = (progress: number) => void] - File progress callback
    */
-  function uploadFile(file, path = '', fileProgress = () => {}) {
-    return new Promise((resolve, reject) => {
+  function uploadFile(file: File, path = '', fileProgress: (progress: number) => void = () => {}) {
+    return new Promise<string>((resolve, reject) => {
       if (file instanceof File) {
         const fileSuffix = file.name.split('.');
         // const obj = {
@@ -58,7 +72,7 @@ export function uploadOBS(oxs) {
             Bucket: oxs.bucket,
             Key: `${path}/${imgName}`,
             SourceFile: file,
-            ProgressCallback: (transferredAmount, totalAmount) => {
+            ProgressCallback: (transferredAmount: number, totalAmount: number) => {
               fileProgress(transferredAmount / totalAmount);
             },
           },

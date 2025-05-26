@@ -13,7 +13,7 @@ export async function role(
   },
   options?: { [key: string]: any },
 ) {
-  let order = {};
+  let order: { [key: string]: string } = {};
   for (const key in options) {
     if (Object.prototype.hasOwnProperty.call(options, key)) {
       const element = options[key];

@@ -15,7 +15,7 @@ export async function currentUser(options?: { [key: string]: any }) {
 /** 获取当前的系统配置 GET /api/currentAppConfig */
 export async function currentAppConfig() {
   return request<{
-    data: API.AppConfig;
+    data: API.AppConfigItem[];
   }>('/api/v1/app-config', {
     method: 'GET',
   });
@@ -23,7 +23,7 @@ export async function currentAppConfig() {
 
 export async function fetchMenuData(options?: { [key: string]: any }) {
   return request<{
-    data: API.MenuData;
+    data: API.MenuDataItem[];
   }>('/api/v1/menurole', {
     method: 'GET',
     ...(options || {}),

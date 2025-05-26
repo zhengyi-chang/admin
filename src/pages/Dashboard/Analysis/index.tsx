@@ -1,4 +1,5 @@
-import { FC, useEffect } from 'react';
+import type { FC } from 'react';
+import { useEffect } from 'react';
 import { useRequest } from 'umi';
 import { Suspense, useState } from 'react';
 import { EllipsisOutlined } from '@ant-design/icons';
@@ -35,7 +36,7 @@ const Analysis: FC<AnalysisProps> = () => {
     getTimeDistance('year'),
   );
 
-  let { loading, data, run } = useRequest((type?: string, timeRange?: RangePickerValue) => {
+  const { loading, data, run } = useRequest((type?: string, timeRange?: RangePickerValue) => {
     return fakeChartData({
       type: type,
       beginTime: timeRange?.[0]?.format(),
@@ -55,25 +56,25 @@ const Analysis: FC<AnalysisProps> = () => {
     }
   };
 
-  const isActive = (type: TimeType) => {
-    if (!rangePickerValue) {
-      return '';
-    }
-    const value = getTimeDistance(type);
-    if (!value) {
-      return '';
-    }
-    if (!rangePickerValue[0] || !rangePickerValue[1]) {
-      return '';
-    }
-    if (
-      rangePickerValue[0].isSame(value[0] as moment.Moment, 'day') &&
-      rangePickerValue[1].isSame(value[1] as moment.Moment, 'day')
-    ) {
-      return styles.currentDate;
-    }
-    return '';
-  };
+  // const isActive = (type: TimeType) => {
+  //   if (!rangePickerValue) {
+  //     return '';
+  //   }
+  //   const value = getTimeDistance(type);
+  //   if (!value) {
+  //     return '';
+  //   }
+  //   if (!rangePickerValue[0] || !rangePickerValue[1]) {
+  //     return '';
+  //   }
+  //   if (
+  //     rangePickerValue[0].isSame(value[0] as moment.Moment, 'day') &&
+  //     rangePickerValue[1].isSame(value[1] as moment.Moment, 'day')
+  //   ) {
+  //     return styles.currentDate;
+  //   }
+  //   return '';
+  // };
 
   let salesPieData;
   if (salesType === 'all') {
@@ -114,7 +115,7 @@ const Analysis: FC<AnalysisProps> = () => {
   return (
     <GridContent>
       <>
-        <Suspense fallback={<PageLoading />}>
+        {/* <Suspense fallback={<PageLoading />}>
           <IntroduceRow
             loading={loading}
             visitData={data?.visitData || []}
@@ -171,7 +172,7 @@ const Analysis: FC<AnalysisProps> = () => {
             offlineChartData={data?.offlineChartData || []}
             handleTabChange={handleTabChange}
           />
-        </Suspense>
+        </Suspense> */}
       </>
     </GridContent>
   );

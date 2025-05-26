@@ -29,14 +29,15 @@ declare namespace API {
   };
 
   type AppConfig = {
-    data: MenuDataItem[];
+    data: AppConfigItem[];
     success?: boolean;
   };
 
   type MenuData = {
-    data: AppConfigItem[];
+    data: MenuDataItem[];
     success?: boolean;
   };
+
   type MenuDataItem = {
     authority?: string[] | string;
     children?: MenuDataItem[];
@@ -275,8 +276,20 @@ declare namespace API {
     success?: boolean;
   };
 
+  type OperationList = {
+    data?: OperationListItem[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
+  };
+
   type MenuGet = {
     data?: MenuListItem;
+    success?: boolean;
+  };
+
+  type OperationGet = {
+    data?: OperationListItem;
     success?: boolean;
   };
 
@@ -287,6 +300,32 @@ declare namespace API {
   type MenuListItem = {
     children: MenuListItem[] | undefined;
     component: string;
+    createdAt?: Date;
+    dataScope: string;
+    icon: string;
+    isFrame: string;
+    visible: boolean;
+    menuId: number;
+    menuName: string;
+    menuType: string;
+    parentId: number;
+    path: string;
+    paths: string;
+    permission: string;
+    sort: number;
+    sysApi: any[];
+    apis: number[];
+    title: string;
+  };
+
+  /**
+   * Operation
+   * 运营
+   */
+  type OperationListItem = {
+    status: any;
+    children: OperationListItem[] | undefined;
+    component: string | undefined;
     createdAt?: Date;
     dataScope: string;
     icon: string;

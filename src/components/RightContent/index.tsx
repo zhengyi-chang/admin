@@ -1,11 +1,8 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
 import React from 'react';
 import { SelectLang, useModel } from 'umi';
-import HeaderSearch from '../HeaderSearch';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
-import NoticeIcon from '../NoticeIcon';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -24,7 +21,7 @@ const GlobalHeaderRight: React.FC = () => {
   }
   return (
     <Space className={className}>
-      <HeaderSearch
+      {/* <HeaderSearch
         className={`${styles.action} ${styles.search}`}
         placeholder="站内搜索"
         defaultValue="go-admin"
@@ -35,21 +32,21 @@ const GlobalHeaderRight: React.FC = () => {
             value: 'go-admin',
           },
         ]}
-        // onSearch={value => {
-        //   console.log('input', value);
-        // }}
-      />
-      <span
+        onSearch={value => {
+          console.log('input', value);
+        }}
+      /> */}
+      {/* <span
         className={styles.action}
         onClick={() => {
           window.open('https://doc.go-admin.dev');
         }}
       >
         <QuestionCircleOutlined />
-      </span>
-      <NoticeIcon />
+      </span> */}
+      {/* <NoticeIcon /> */}
       <Avatar />
-      <SelectLang className={styles.action} />
+      {/* <SelectLang className={styles.action} /> */}
     </Space>
   );
 };

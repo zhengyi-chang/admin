@@ -1,13 +1,39 @@
 import COS from 'cos-js-sdk-v5';
 import { random_name } from './tools';
 
+interface OxsConfig {
+  provisionalAuth: boolean;
+  accessKey?: string;
+  secretKey?: string;
+  credential?: {
+    TmpSecretId: string;
+    TmpSecretKey: string;
+    Token: string;
+  };
+  ExpiredTime?: number;
+  bucket: string;
+  region: string;
+}
+
+interface ProgressData {
+  loaded: number;
+  total: number;
+  speed: number;
+  percent: number;
+}
+
+interface CosResult {
+  statusCode: number;
+  Location: string;
+}
+
 /**
  * @desc 腾讯云 COS 封装
- * @param {Object} access_key
+ * @param {OxsConfig} oxs - 配置信息
  * @returns { uploadFile }
  */
-export function uploadCOS(oxs) {
-  let clientCOS;
+export function uploadCOS(oxs: OxsConfig) {
+  let clientCOS: any;
   // 判断临时认证方式还是AK/SK方式
   // true 临时秘钥认证 上传
   // false ak/ak 上传
@@ -18,9 +44,9 @@ export function uploadCOS(oxs) {
     });
   } else {
     clientCOS = new COS({
-      SecretId: oxs.credential.TmpSecretId,
-      SecretKey: oxs.credential.TmpSecretKey,
-      XCosSecurityToken: oxs.credential.Token,
+      SecretId: oxs.credential?.TmpSecretId,
+      SecretKey: oxs.credential?.TmpSecretKey,
+      XCosSecurityToken: oxs.credential?.Token,
       ExpiredTime: oxs.ExpiredTime,
     });
   }
@@ -29,10 +55,10 @@ export function uploadCOS(oxs) {
    * @desc 文件上传
    * @param {File} file
    * @param {String} [path = ''] - File upload path
-   * @param {Function} [fileProgress = (transferredAmount, totalAmount, totalSeconds) => void] - File progress callback
+   * @param {Function} [fileProgress = (percent: number) => void] - File progress callback
    */
-  function uploadFile(file, path = '', fileProgress = () => {}) {
-    return new Promise((resolve, reject) => {
+  function uploadFile(file: File, path = '', fileProgress: (percent: number) => void = () => {}) {
+    return new Promise<string>((resolve, reject) => {
       if (file instanceof File) {
         const fileSuffix = file.name.split('.');
         // const obj = {
@@ -50,14 +76,14 @@ export function uploadCOS(oxs) {
             Region: oxs.region, // 地区
             Key: `${path}/${imgName}`, // 图片名称
             Body: file,
-            onHashProgress: function (progressData) {
+            onHashProgress: function (progressData: ProgressData) {
               console.log('校验中', JSON.stringify(progressData));
             },
-            onProgress: function (progressData) {
+            onProgress: function (progressData: ProgressData) {
               fileProgress(progressData.percent);
             },
           },
-          function (err, result) {
+          function (err: Error | null, result: CosResult) {
             if (!err) {
               if (result.statusCode == 200) {
                 resolve(`http://${result.Location}`);

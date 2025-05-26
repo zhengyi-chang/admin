@@ -1,5 +1,5 @@
 import { outLogin } from '@/services/ant-design-pro/api';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
 import { stringify } from 'querystring';
@@ -32,9 +32,8 @@ const loginOut = async () => {
   }
 };
 
-const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
+const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu: showMenu = true }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  menu = true;
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
@@ -71,13 +70,13 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   }
 
   const menuItems: ItemType[] = [
-    ...(menu
+    ...(showMenu
       ? [
-          {
-            key: 'center',
-            icon: <UserOutlined />,
-            label: '个人中心',
-          },
+          // {
+          //   key: 'center',
+          //   icon: <UserOutlined />,
+          //   label: '个人中心',
+          // },
           {
             key: 'settings',
             icon: <SettingOutlined />,

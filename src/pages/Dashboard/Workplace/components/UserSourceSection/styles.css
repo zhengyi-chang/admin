@@ -1,0 +1,110 @@
+.user-source-section {
+  padding: 32px 40px;
+  background: #f3f3fb;
+  border-radius: 12px;
+}
+
+.user-source-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.user-source-title {
+  color: #111;
+  font-weight: 300;
+  font-size: 24px;
+}
+
+.user-source-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-button {
+  padding: 8px 16px;
+  color: #454549;
+  font-weight: 500;
+  font-size: 16px;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover,
+.filter-button.active {
+  color: #292fe1;
+  background: rgba(64, 66, 204, 0.1);
+  border-color: #292fe1;
+}
+
+.user-source-content {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+
+.user-stats {
+  width: 550px;
+  height: 320px;
+}
+
+.user-metrics {
+  display: flex;
+  flex-direction: row;
+  gap: 120px;
+  align-items: center;
+}
+
+.total-users-container {
+  text-align: center;
+}
+
+.total-users {
+  margin-bottom: 4px;
+  color: #000;
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 1;
+}
+
+.total-users-label {
+  color: #5d5d61;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 48px 84px;
+}
+
+.metric-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.metric-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.metric-value {
+  color: #000;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.metric-label {
+  color: #5D5D61;
+  font-weight: 500;
+  font-size: 16px;
+  margin-left: 23px;
+}

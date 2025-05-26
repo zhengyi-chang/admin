@@ -1,0 +1,208 @@
+name: Trigger Deployment and Notify
+
+on:
+  push:
+    branches: #[dev, test, stage, main]
+      - main
+    tags: ['v*']  # Trigger on version tags (e.g., v1.0.0)
+    paths-ignore: 
+      - 'README.md'
+      - '.github/**'
+      - 'docs/**'
+      - '*.md'
+  # pull_request:
+  #   branches: [dev, test, stage, main]
+  #   types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+
+env:
+  # Vercel Deploy Hooks
+  DEV_VERCEL_DEPLOY_HOOK: https://api.vercel.com/v1
+  TEST_VERCEL_DEPLOY_HOOK: https://api.vercel.com/v1/
+  STAGE_VERCEL_DEPLOY_HOOK: https://api.vercel.com/v1
+  PROD_VERCEL_DEPLOY_HOOK: https://api.vercel.com/v1/integrations/deploy/prj_BgPMXkxMocE9a5jLYVeIDAY3bjQP/N6wGhZMGPX
+
+  # Frontend Websites / Domains
+  DEV_DOMAIN: https://
+  TEST_DOMAIN: https://
+  STAGE_DOMAIN: https://
+  PROD_DOMAIN: https://console798.polyflow.tech
+
+  # Lark/Feishu Bot Webhook
+  LARK_BOT_HOOK: https://open.larksuite.com/open-apis/bot/v2/hook/4caeb13f-8054-4284-bd67-bed7a918b750
+
+jobs:
+  trigger-deployment-and-send-notification:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Determine environment settings
+        id: set-env
+        run: |
+          # For tags (e.g., v1.0.0)
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            echo "ENV_NAME=Production (Tag)" >> $GITHUB_ENV
+            echo "ENV_DOMAIN=PROD_DOMAIN_NOT_SET" >> $GITHUB_ENV
+            echo "IS_TAG=true" >> $GITHUB_ENV
+            echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+            
+          # # For pull requests
+          # elif [ "${{ github.event_name }}" == "pull_request" ]; then
+          #   echo "ENV_NAME=PR Preview" >> $GITHUB_ENV
+          #   echo "ENV_DOMAIN=PR_PREVIEW_NOT_SET" >> $GITHUB_ENV
+          #   echo "IS_PR=true" >> $GITHUB_ENV
+          #   echo "PR_NUMBER=${{ github.event.number }}" >> $GITHUB_ENV
+            
+          # For branch pushes
+          else
+            case "${{ github.ref }}" in
+              "refs/heads/dev")
+                echo "VERCEL_URL=${{ env.DEV_VERCEL_DEPLOY_HOOK }}" >> $GITHUB_ENV
+                echo "ENV_NAME=Development" >> $GITHUB_ENV
+                echo "ENV_DOMAIN=${{ env.DEV_DOMAIN }}" >> $GITHUB_ENV
+                ;;
+              "refs/heads/test")
+                echo "VERCEL_URL=${{ env.TEST_VERCEL_DEPLOY_HOOK }}" >> $GITHUB_ENV
+                echo "ENV_NAME=Test" >> $GITHUB_ENV
+                echo "ENV_DOMAIN=${{ env.TEST_DOMAIN }}" >> $GITHUB_ENV
+                ;;
+              "refs/heads/stage")
+                echo "VERCEL_URL=${{ env.STAGE_VERCEL_DEPLOY_HOOK }}" >> $GITHUB_ENV
+                echo "ENV_NAME=Staging" >> $GITHUB_ENV
+                echo "ENV_DOMAIN=${{ env.STAGE_DOMAIN }}" >> $GITHUB_ENV
+                ;;
+              "refs/heads/main")
+                echo "VERCEL_URL=${{ env.PROD_VERCEL_DEPLOY_HOOK }}" >> $GITHUB_ENV
+                echo "ENV_NAME=Production" >> $GITHUB_ENV
+                echo "ENV_DOMAIN=${{ env.PROD_DOMAIN }}" >> $GITHUB_ENV
+                ;;
+            esac
+          fi
+
+      - name: Trigger Vercel Deployment
+        # if: |
+        #   (github.event_name == 'push' && !contains(github.ref, 'refs/tags/')) || 
+        #   (github.event_name == 'pull_request')
+        run: |
+          if [ -z "${{ env.VERCEL_URL }}" ]; then
+            echo "No deployment hook configured for ${{ env.ENV_NAME }}"
+            exit 0
+          fi
+          
+          echo "Triggering ${{ env.ENV_NAME }} deployment..."
+          if ! curl -sSf -X POST "${{ env.VERCEL_URL }}"; then
+            echo "Deployment trigger failed"
+            exit 1
+          fi
+          echo "Deployment triggered successfully"
+
+      - name: Prepare notification data
+        id: prepare-notification
+        run: |
+          # Create description based on event type
+
+          DESCRIPTION=$(
+            if [ "${{ env.IS_TAG }}" = "true" ]; then
+              printf "**Tag: ** %s\n**Environment: ** %s" "${{ env.TAG_NAME }}" "${{ env.ENV_NAME }}"
+            elif [ "${{ env.IS_PR }}" == "true" ]; then
+              printf "**PR: ** %s\n**Branch: ** %s" "${{ github.event.number }}" "${{ github.head_ref }}"
+            else
+              printf "**Branch: ** %s\n**Environment: ** %s" "${{ github.ref_name }}" "${{ env.ENV_NAME }}"
+            fi | jq -Rs .
+          )
+
+          TITLE=$(
+            if [ "${{ env.IS_TAG }}" = "true" ]; then
+              echo "Vercel部署通知-🚀New Release Tag"
+            elif [ "${{ env.IS_PR }}" == "true" ]; then
+              echo "Vercel部署通知-🔀Pull Request Update"
+            else
+              echo "Vercel部署通知-🔄Branch Update"
+            fi | jq -R .
+          )
+          
+          # Create the JSON payload using jq
+          CARD_PAYLOAD=$(jq -n \
+            --argjson description "$DESCRIPTION" \
+            --argjson title "$TITLE" \
+            --argjson repo "$(echo '${{ github.repository }}' | jq -R .)" \
+            --arg sha "$(echo '${{ github.sha }}' | cut -c1-7)" \
+            --argjson actor "$(echo '${{ github.actor }}' | jq -R .)" \
+            --arg domain "$ENV_DOMAIN" \
+            '{
+              "msg_type": "interactive",
+              "card": {
+                "elements": [
+                  {
+                    "tag": "div",
+                    "text": {
+                      "content": $description,
+                      "tag": "lark_md"
+                    }
+                  },
+                  {
+                    "tag": "div",
+                    "fields": [
+                      {
+                        "is_short": true,
+                        "text": {
+                          "content": ("**Repository:** " + $repo),
+                          "tag": "lark_md"
+                        }
+                      },
+                      {
+                        "is_short": true,
+                        "text": {
+                          "content": ("**Commit:** " + $sha),
+                          "tag": "lark_md"
+                        }
+                      },
+                      {
+                        "is_short": true,
+                        "text": {
+                          "content": ("**Triggered by:** " + $actor),
+                          "tag": "lark_md"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "action",
+                    "actions": [
+                      {
+                        "tag": "button",
+                        "text": {
+                          "content": "点击查看Website",
+                          "tag": "lark_md"
+                        },
+                        "url": $domain,
+                        "type": "default"
+                      }
+                    ]
+                  }
+                ],
+                "header": {
+                  "title": {
+                    "content": $title,
+                    "tag": "plain_text"
+                  }
+                }
+              }
+            }')
+
+          echo "CARD_PAYLOAD<<EOF" >> $GITHUB_OUTPUT
+          echo "$CARD_PAYLOAD" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Send Lark Notification
+        if: always()
+        run: |
+          echo "Sending notification to Lark..."
+          if ! curl -sSf -X POST \
+            "${{ env.LARK_BOT_HOOK }}" \
+            -H "Content-Type: application/json" \
+            -d '${{ steps.prepare-notification.outputs.CARD_PAYLOAD }}'; then
+            echo "Failed to send notification"
+            exit 1
+          fi
+          echo "Notification sent successfully"

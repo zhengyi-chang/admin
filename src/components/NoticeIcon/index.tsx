@@ -3,7 +3,7 @@ import { message, Tag } from 'antd';
 import { groupBy } from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useModel, useRequest } from 'umi';
+import { useRequest } from 'umi';
 import styles from './index.less';
 import NoticeIcon from './NoticeIcon';
 
@@ -70,8 +70,6 @@ const getUnreadData = (noticeData: Record<string, API.NoticeIconItem[]>) => {
 };
 
 const NoticeIconView: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
-  const { currentUser } = initialState || {};
   const [notices, setNotices] = useState<API.NoticeIconItem[]>([]);
   const { data } = useRequest(getNotices);
 
@@ -106,14 +104,7 @@ const NoticeIconView: React.FC = () => {
     );
     message.success(`${'清空了'} ${title}`);
   };
-  useEffect(() => {
-    const timer = setInterval(async () => {
-      const data = await getNotices();
-      if (data?.data) {
-        setNotices(data.data || []);
-      }
-    }, 50000);
-  }, []);
+
   return (
     <NoticeIcon
       className={styles.action}

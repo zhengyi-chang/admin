@@ -4,7 +4,7 @@ import type { FormValueType } from './UpdatePwd';
 import UpdatePwdForm from './UpdatePwd';
 import { useIntl } from 'umi';
 import { updateUserPassword } from '../service';
-import { UpdatePwd } from '../data';
+import type { UpdatePwd } from '../data';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 

@@ -1,0 +1,13 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-height: 100vh;
+  padding: 40px;
+  background: #fff;
+}
+.dashboard-title {
+  color: #111;
+  font-weight: 300;
+  font-size: 32px;
+}

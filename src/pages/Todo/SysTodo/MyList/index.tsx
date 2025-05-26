@@ -58,25 +58,29 @@ const ListStatus = ({ data: { status } }: { data: { status: string } }) => {
   if (status === 'l') {
     return (
       <>
-        <IconFont type="icon-renwu-difengxian"></IconFont>&nbsp;低
+        <IconFont type="icon-renwu-difengxian" />
+        &nbsp;低
       </>
     );
   } else if (status === 'm') {
     return (
       <>
-        <IconFont type="icon-renwu-zhongfengxian"></IconFont>&nbsp;中
+        <IconFont type="icon-renwu-zhongfengxian" />
+        &nbsp;中
       </>
     );
   } else if (status === 'h') {
     return (
       <>
-        <IconFont type="icon-renwu-gaofengxian"></IconFont>&nbsp;高
+        <IconFont type="icon-renwu-gaofengxian" />
+        &nbsp;高
       </>
     );
   } else if (status === 'jj') {
     return (
       <>
-        <IconFont type="icon-renwu-jinjifengxian"></IconFont>&nbsp;紧急
+        <IconFont type="icon-renwu-jinjifengxian" />
+        &nbsp;紧急
       </>
     );
   } else {

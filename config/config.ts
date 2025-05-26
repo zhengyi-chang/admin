@@ -1,12 +1,11 @@
 // https://umijs.org/config/
-import { defineConfig } from 'umi';
-import { join } from 'path';
-import defaultSettings from './defaultSettings';
-import proxy from './proxy';
-import routes from './routes';
 import CompressionPlugin from 'compression-webpack-plugin';
+import { defineConfig } from 'umi';
+import defaultSettings from './defaultSettings';
+import routes from './routes';
 
-const { REACT_APP_ENV } = process.env;
+// 获取环境变量
+const { API_ENV } = process.env;
 
 export default defineConfig({
   chunks: ['vendors', 'umi'],
@@ -27,7 +26,7 @@ export default defineConfig({
               },
               vendor: {
                 name: 'vendors',
-                test({ resource }) {
+                test({ resource }: { resource: string }) {
                   return /[\\/]node_modules[\\/]/.test(resource);
                 },
                 priority: 6,
@@ -67,6 +66,7 @@ export default defineConfig({
           test: /\.js$|\.html$|\.css$/, //匹配文件名
           threshold: 10240, //对超过10k的数据压缩
           deleteOriginalAssets: false, //不删除源文件
+          algorithm: 'gzip', // 使用gzip压缩
         },
       ]);
       config
@@ -91,11 +91,11 @@ export default defineConfig({
   },
   // https://umijs.org/zh-CN/plugins/plugin-locale
   locale: {
-    // default zh-CN
-    default: 'zh-CN',
+    // default: 'zh-CN',
+    default: 'en-US',
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: true,
+    baseNavigator: false,
   },
   dynamicImport: {
     loading: '@ant-design/pro-layout/es/PageLoading',
@@ -118,7 +118,6 @@ export default defineConfig({
   esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
   },
@@ -128,4 +127,7 @@ export default defineConfig({
   mfsu: {},
   webpack5: {},
   exportStatic: {},
+  define: {
+    'process.env.API_ENV': API_ENV || undefined,
+  },
 });

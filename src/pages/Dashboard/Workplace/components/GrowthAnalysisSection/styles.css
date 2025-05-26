@@ -1,0 +1,52 @@
+.growth-analysis-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  gap: 32px;
+  padding: 40px;
+  background: #fff;
+  background: #f3f3fb;
+  border-radius: 16px;
+  border-radius: 16px;
+}
+
+.growth-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.growth-title {
+  color: #111;
+  font-weight: 300;
+  font-size: 32px;
+}
+
+.growth-time-filters {
+  display: flex;
+  gap: 12px;
+}
+
+.growth-time-button {
+  padding: 8px 16px;
+  color: #454549;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+  background: transparent;
+  border: none !important;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.growth-time-button:hover,
+.growth-time-button.active {
+  color: #292fe1;
+  background: rgba(41, 47, 225, 0.1);
+  border-color: #292fe1;
+}
+
+.growth-chart-container {
+  height: 400px;
+}

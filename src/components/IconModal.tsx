@@ -1,5 +1,5 @@
 import React from 'react';
-import { message, Tabs, Tooltip } from 'antd';
+import { Tabs, Tooltip } from 'antd';
 import { DrawerForm } from '@ant-design/pro-components';
 import { createFromIconfontCN } from '@ant-design/icons';
 
@@ -471,7 +471,7 @@ const IconModal: React.FC<IconModalProps> = (props) => {
       <Tabs defaultActiveKey="1">
         <TabPane tab="方向性图标" key="1">
           {directionIcons.map((item) => {
-            let name = item;
+            const name = item;
             return (
               <Tooltip title={item} key={item}>
                 <IconFont
@@ -488,7 +488,7 @@ const IconModal: React.FC<IconModalProps> = (props) => {
         </TabPane>
         <TabPane tab="指示性图标" key="2">
           {suggestionIcons.map((item) => {
-            let name = item;
+            const name = item;
             return (
               <Tooltip title={item} key={item}>
                 <IconFont
@@ -505,7 +505,7 @@ const IconModal: React.FC<IconModalProps> = (props) => {
         </TabPane>
         <TabPane tab="编辑类图标" key="3">
           {editIcons.map((item) => {
-            let name = item;
+            const name = item;
             return (
               <Tooltip title={item} key={item}>
                 <IconFont
@@ -522,7 +522,7 @@ const IconModal: React.FC<IconModalProps> = (props) => {
         </TabPane>
         <TabPane tab="数据类图标" key="4">
           {dataIcons.map((item) => {
-            let name = item;
+            const name = item;
             return (
               <Tooltip title={item} key={item}>
                 <IconFont
@@ -539,7 +539,7 @@ const IconModal: React.FC<IconModalProps> = (props) => {
         </TabPane>
         <TabPane tab="网站通用图标" key="5">
           {webIcons.map((item) => {
-            let name = item;
+            const name = item;
             return (
               <Tooltip title={item} key={item}>
                 <IconFont
@@ -556,7 +556,7 @@ const IconModal: React.FC<IconModalProps> = (props) => {
         </TabPane>
         <TabPane tab="品牌和标识" key="6">
           {logoIcons.map((item) => {
-            let name = item;
+            const name = item;
             return (
               <Tooltip title={item} key={item}>
                 <IconFont
@@ -573,7 +573,7 @@ const IconModal: React.FC<IconModalProps> = (props) => {
         </TabPane>
         <TabPane tab="多彩图标" key="7">
           {colorIcons.map((item) => {
-            let name = item;
+            const name = item;
             return (
               <Tooltip title={item} key={item}>
                 <IconFont

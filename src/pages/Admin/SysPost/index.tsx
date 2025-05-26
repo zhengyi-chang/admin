@@ -16,7 +16,7 @@ import { post, getPost, addPost, updatePost, removePost } from '@/services/ant-d
  */
 const handlePostGet = async (id: number) => {
   try {
-    let resData = await getPost(id);
+    const resData = await getPost(id);
     return resData;
   } catch (error) {
     return undefined;

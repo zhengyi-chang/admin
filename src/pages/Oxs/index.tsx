@@ -5,7 +5,7 @@ import { useState } from 'react';
 import useOxs from '../../utils/oxs/';
 
 export default function OxsDemo() {
-  const [percent, setPercent] = useState<{}>({});
+  const [uploadProgress, setUploadProgress] = useState<{}>({});
   const { uploadOXS } = useOxs();
 
   return (
@@ -14,15 +14,15 @@ export default function OxsDemo() {
         label="upload"
         name="upload"
         fieldProps={{
-          progress: percent,
+          progress: uploadProgress,
         }}
         action={async (file) => {
-          var uploadFile = await uploadOXS();
+          const uploadFile = await uploadOXS();
           if (uploadFile) {
             uploadFile(file, 'temp', (res) => {
-              setPercent(res);
+              setUploadProgress(res);
               console.log(res * 100);
-              setPercent({
+              setUploadProgress({
                 uid: file,
                 percent: parseInt(res * 100),
                 name: file,
@@ -30,7 +30,7 @@ export default function OxsDemo() {
               });
             }).then((res) => {
               console.log('then', res);
-              setPercent({
+              setUploadProgress({
                 uid: file,
                 percent: 1,
                 name: file,
@@ -51,7 +51,7 @@ export default function OxsDemo() {
           if (event) {
             // 一定要加判断，不然会报错
             this.setState({ percent: 30 });
-            console.log(percent); // percent就是进度条的数值
+            console.log(uploadProgress); // percent就是进度条的数值
           }
         }}
       />
@@ -68,19 +68,13 @@ export default function OxsDemo() {
         onProgress={({ percent }, file) => {
           console.log('onProgress', `${percent}%`, file.name);
         }}
-        customRequest={async (option) => {
-          option.action = async (option) => {
-            var uploadFile = await uploadOXS();
+        customRequest={async (uploadOption) => {
+          uploadOption.action = async (option) => {
+            const uploadFile = await uploadOXS();
             if (uploadFile) {
               uploadFile(option.file, 'temp', (res) => {
-                setPercent(res);
+                setUploadProgress(res);
                 console.log(res * 100);
-                // setPercent({
-                //     uid: file,
-                //     percent: parseInt(res * 100),
-                //     name: file,
-                //     status: 'uploading',
-                // })
                 option.onProgress({ percent: parseInt(res * 100) }, option.file);
               }).then((res) => {
                 console.log('then', res);
@@ -91,38 +85,10 @@ export default function OxsDemo() {
             }
           };
         }}
-        // action={async (file) => {
-        //     var uploadFile = await uploadOXS()
-        //     if (uploadFile) {
-        //         uploadFile(file, "temp", (res) => {
-        //             setPercent(res)
-        //             console.log(res * 100)
-        //             setPercent({
-        //                 uid: file,
-        //                 percent: parseInt(res * 100),
-        //                 name: file,
-        //                 status: 'uploading',
-        //             })
-        //         }).then((res) => {
-        //             console.log("then", res)
-        //             setPercent({
-        //                 uid: file,
-        //                 percent: 1,
-        //                 name: file,
-        //                 status: 'success',
-        //             })
-        //             return res
-        //         })
-        //     } else {
-        //         message.error('图片上传功能暂时无法使用')
-        //     };
-
-        //     return ""
-        // }}
         onChange={(file) => {
           console.log('onChange', file);
           if (file.event) {
-            file.event.percent = percent?.percent;
+            file.event.percent = uploadProgress?.percent;
           }
           return file;
         }}

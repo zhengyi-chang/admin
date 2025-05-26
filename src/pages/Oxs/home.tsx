@@ -3,7 +3,7 @@ import { Upload, message, List, Button, Image, Tag, Spin, Typography, Modal, Pro
 import { InboxOutlined } from '@ant-design/icons';
 // 第三方上传sdk
 import useOxs from '../../utils/oxs/';
-import { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
+import type { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
 import copy from 'copy-to-clipboard';
 import './index.less';
 
@@ -44,7 +44,7 @@ const UploadForm: React.FC<{}> = () => {
     const file = option.file as File;
     try {
       // 使用第三方服务进行文件上传
-      var uploadFile = await uploadOXS();
+      const uploadFile = await uploadOXS();
       if (uploadFile) {
         uploadFile(file, 'temp', (res) => {
           console.log(parseInt(res * 100).toFixed(0));
@@ -64,15 +64,15 @@ const UploadForm: React.FC<{}> = () => {
     }
   };
 
-  const handleBeforeUpload = (file: RcFile, fileList: RcFile[]) => {
+  const handleBeforeUpload = (file: RcFile, uploadFileList: RcFile[]) => {
     const SAFE_FILE_SUM = 20;
 
-    if (fileList.length <= SAFE_FILE_SUM) return Promise.resolve();
+    if (uploadFileList.length <= SAFE_FILE_SUM) return Promise.resolve();
 
     return new Promise<void>((resolve, reject) =>
       Modal.confirm({
         title: 'Are U Sure ???',
-        content: `文件个数大于${SAFE_FILE_SUM}(${fileList.length}个)`,
+        content: `文件个数大于${SAFE_FILE_SUM}(${uploadFileList.length}个)`,
         onOk() {
           resolve();
         },

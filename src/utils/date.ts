@@ -1,6 +1,6 @@
 export function getTimeState() {
-  let timeNow = new Date();
-  let hours = timeNow.getHours();
+  const timeNow = new Date();
+  const hours = timeNow.getHours();
   let text = '';
 
   // 凌晨00: 00—5: 00、
